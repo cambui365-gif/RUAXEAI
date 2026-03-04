@@ -1,0 +1,19 @@
+# This file tracks properties of this Flutter project.
+version:
+  revision: "a14f74ff3a1cbd521163c5f03d68113d50af5fca"
+  channel: "stable"
+
+project_type: app
+
+migration:
+  platforms:
+    - platform: root
+      create_revision: a14f74ff3a1cbd521163c5f03d68113d50af5fca
+      base_revision: a14f74ff3a1cbd521163c5f03d68113d50af5fca
+    - platform: android
+      create_revision: a14f74ff3a1cbd521163c5f03d68113d50af5fca
+      base_revision: a14f74ff3a1cbd521163c5f03d68113d50af5fca
+
+  unmanaged_files:
+    - 'lib/main.dart'
+    - 'android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java'
