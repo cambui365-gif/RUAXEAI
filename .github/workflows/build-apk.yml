@@ -17,27 +17,26 @@ jobs:
           flutter-version: '3.27.4'
           channel: 'stable'
 
-      - name: Recreate Android project files
+      - name: Setup Android project
         run: |
           cd tablet-app
-          # Backup our custom files
+          
+          # Save custom source files
           cp android/app/src/main/AndroidManifest.xml /tmp/AndroidManifest.xml
           cp android/app/src/main/kotlin/com/ruaxeai/app/MainActivity.kt /tmp/MainActivity.kt
           cp android/app/src/main/kotlin/com/ruaxeai/app/BootReceiver.kt /tmp/BootReceiver.kt
-          cp android/app/src/main/res/values/styles.xml /tmp/styles.xml
-          cp android/app/build.gradle /tmp/build.gradle.app
           
-          # Remove android dir and recreate
+          # Nuke entire android dir
           rm -rf android
+          
+          # Let Flutter regenerate everything
           flutter create --org com.ruaxeai --project-name ruaxeai_tablet --platforms android .
           
-          # Restore our custom files
+          # Restore ONLY our custom source files (NOT build.gradle)
           cp /tmp/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
           mkdir -p android/app/src/main/kotlin/com/ruaxeai/app
           cp /tmp/MainActivity.kt android/app/src/main/kotlin/com/ruaxeai/app/MainActivity.kt
           cp /tmp/BootReceiver.kt android/app/src/main/kotlin/com/ruaxeai/app/BootReceiver.kt
-          cp /tmp/styles.xml android/app/src/main/res/values/styles.xml
-          cp /tmp/build.gradle.app android/app/build.gradle
 
       - name: Get dependencies
         run: cd tablet-app && flutter pub get
