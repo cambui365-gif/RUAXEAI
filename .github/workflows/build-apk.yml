@@ -20,23 +20,15 @@ jobs:
       - name: Setup Android project
         run: |
           cd tablet-app
-          
-          # Save custom source files
-          cp android/app/src/main/AndroidManifest.xml /tmp/AndroidManifest.xml
-          cp android/app/src/main/kotlin/com/ruaxeai/app/MainActivity.kt /tmp/MainActivity.kt
-          cp android/app/src/main/kotlin/com/ruaxeai/app/BootReceiver.kt /tmp/BootReceiver.kt
-          
-          # Nuke entire android dir
-          rm -rf android
-          
-          # Let Flutter regenerate everything
+          rm -rf android ios windows linux macos web
           flutter create --org com.ruaxeai --project-name ruaxeai_tablet --platforms android .
           
-          # Restore ONLY our custom source files (NOT build.gradle)
-          cp /tmp/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
-          mkdir -p android/app/src/main/kotlin/com/ruaxeai/app
-          cp /tmp/MainActivity.kt android/app/src/main/kotlin/com/ruaxeai/app/MainActivity.kt
-          cp /tmp/BootReceiver.kt android/app/src/main/kotlin/com/ruaxeai/app/BootReceiver.kt
+          # Patch AndroidManifest for kiosk mode
+          sed -i 's|android:name=".MainActivity"|android:name=".MainActivity"\n            android:screenOrientation="landscape"\n            android:keepScreenOn="true"|' android/app/src/main/AndroidManifest.xml
+          
+          # Add INTERNET + USB permissions
+          sed -i 's|<manifest|<manifest xmlns:tools="http://schemas.android.com/tools"|' android/app/src/main/AndroidManifest.xml
+          sed -i '/<application/i\    <uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.WAKE_LOCK"/>\n    <uses-feature android:name="android.hardware.usb.host" android:required="false"/>' android/app/src/main/AndroidManifest.xml
 
       - name: Get dependencies
         run: cd tablet-app && flutter pub get
