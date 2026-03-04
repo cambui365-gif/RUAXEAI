@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/activation_screen.dart';
 import 'screens/kiosk_screen.dart';
@@ -13,9 +12,6 @@ void main() async {
   // Full screen, hide system bars
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
-
-  // Keep screen on
-  WakelockPlus.enable();
 
   runApp(const RuaxeaiApp());
 }

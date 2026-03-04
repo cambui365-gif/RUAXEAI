@@ -26,9 +26,11 @@ jobs:
           # Patch AndroidManifest for kiosk mode
           sed -i 's|android:name=".MainActivity"|android:name=".MainActivity"\n            android:screenOrientation="landscape"\n            android:keepScreenOn="true"|' android/app/src/main/AndroidManifest.xml
           
-          # Add INTERNET + USB permissions
-          sed -i 's|<manifest|<manifest xmlns:tools="http://schemas.android.com/tools"|' android/app/src/main/AndroidManifest.xml
-          sed -i '/<application/i\    <uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.WAKE_LOCK"/>\n    <uses-feature android:name="android.hardware.usb.host" android:required="false"/>' android/app/src/main/AndroidManifest.xml
+          # Add permissions
+          sed -i '/<application/i\    <uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.WAKE_LOCK"/>' android/app/src/main/AndroidManifest.xml
+          
+          # Update Kotlin version in settings.gradle for compatibility
+          sed -i 's|org.jetbrains.kotlin.android" version "[^"]*"|org.jetbrains.kotlin.android" version "1.9.22"|' android/settings.gradle
 
       - name: Get dependencies
         run: cd tablet-app && flutter pub get
