@@ -17,9 +17,9 @@ class PaymentScreen extends StatefulWidget {
 class _PaymentScreenState extends State<PaymentScreen> {
   final _api = ApiService.instance;
   final _fmt = NumberFormat('#,###', 'vi');
-  final _amounts = [30000, 50000, 100000, 200000];
+  final _amounts = [10000, 20000, 30000, 50000];
 
-  int _selectedAmount = 30000;
+  int _selectedAmount = 10000;
   PaymentQR? _qr;
   bool _loading = false;
   bool _paid = false;

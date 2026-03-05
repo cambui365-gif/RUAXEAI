@@ -23,7 +23,7 @@ export const DEFAULT_SERVICES = [
 ];
 
 export const DEFAULT_CONFIG = {
-  minDeposit: 30000, // 30k VND
+  minDeposit: 10000, // 10k VND
   maxPauseMinutes: 5,
   autoRestartMinutes: 10,
   sepay: {
