@@ -35,6 +35,10 @@ jobs:
           # Set Java 17 compatibility in build.gradle
           sed -i 's|sourceCompatibility.*|sourceCompatibility = JavaVersion.VERSION_17|' android/app/build.gradle
           sed -i 's|targetCompatibility.*|targetCompatibility = JavaVersion.VERSION_17|' android/app/build.gradle
+          
+          # Bump minSdk to 24 (required by flutter_tts)
+          sed -i 's|minSdk = flutter.minSdkVersion|minSdk = 24|' android/app/build.gradle
+          sed -i 's|minSdkVersion flutter.minSdkVersion|minSdkVersion 24|' android/app/build.gradle
 
       - name: Get dependencies
         run: cd tablet-app && flutter pub get
