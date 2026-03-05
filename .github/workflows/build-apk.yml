@@ -39,6 +39,16 @@ jobs:
           # Bump minSdk to 24 (required by flutter_tts)
           sed -i 's|minSdk = flutter.minSdkVersion|minSdk = 24|' android/app/build.gradle
           sed -i 's|minSdkVersion flutter.minSdkVersion|minSdkVersion 24|' android/app/build.gradle
+          
+          # Set Kotlin JVM target to 17 to match Java
+          cat >> android/app/build.gradle << 'GRADLE'
+          
+          tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+              compilerOptions {
+                  jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+              }
+          }
+          GRADLE
 
       - name: Get dependencies
         run: cd tablet-app && flutter pub get
