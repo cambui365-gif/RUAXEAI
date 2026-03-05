@@ -12,7 +12,7 @@ class ActivationScreen extends StatefulWidget {
 }
 
 class _ActivationScreenState extends State<ActivationScreen> {
-  final _serverController = TextEditingController(text: 'https://');
+  final _serverController = TextEditingController();
   final _codeController = TextEditingController();
   bool _loading = false;
   String? _error;
@@ -35,7 +35,13 @@ class _ActivationScreenState extends State<ActivationScreen> {
   }
 
   Future<void> _activate() async {
-    final serverUrl = _serverController.text.trim().replaceAll(RegExp(r'/$'), '');
+    var serverUrl = _serverController.text.trim().replaceAll(RegExp(r'/$'), '');
+    // Ensure proper URL format
+    if (!serverUrl.startsWith('http://') && !serverUrl.startsWith('https://')) {
+      serverUrl = 'https://$serverUrl';
+    }
+    // Fix double https://
+    serverUrl = serverUrl.replaceAll('https://https://', 'https://').replaceAll('http://http://', 'http://');
     final code = _codeController.text.trim().toLowerCase();
 
     if (serverUrl.isEmpty || code.isEmpty) {
