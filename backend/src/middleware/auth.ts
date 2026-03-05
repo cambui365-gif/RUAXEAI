@@ -55,7 +55,7 @@ export const adminAuth = async (req: Request, res: Response, next: NextFunction)
  */
 export const stationAuth = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const stationId = req.headers['x-station-id'] as string;
+    const stationId = (req.headers['x-station-id'] as string)?.toLowerCase();
     const tabletId = req.headers['x-tablet-id'] as string;
 
     if (!stationId || !tabletId) {

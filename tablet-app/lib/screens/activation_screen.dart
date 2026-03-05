@@ -36,7 +36,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
 
   Future<void> _activate() async {
     final serverUrl = _serverController.text.trim().replaceAll(RegExp(r'/$'), '');
-    final code = _codeController.text.trim().toUpperCase();
+    final code = _codeController.text.trim().toLowerCase();
 
     if (serverUrl.isEmpty || code.isEmpty) {
       setState(() => _error = 'Vui lòng nhập đầy đủ thông tin');
