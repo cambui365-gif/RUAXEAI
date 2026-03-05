@@ -83,12 +83,13 @@ class _KioskScreenState extends State<KioskScreen> {
           _session = Session(
             id: _session!.id,
             stationId: _session!.stationId,
-            depositAmount: _session!.depositAmount,
+            status: _session!.status,
+            totalDeposited: _session!.totalDeposited,
+            totalUsed: _session!.totalUsed + costPerSecond.floor(),
             remainingBalance: (_session!.remainingBalance - costPerSecond).floor(),
             currentServiceId: _session!.currentServiceId,
+            currentServiceStartTime: _session!.currentServiceStartTime,
             isPaused: _session!.isPaused,
-            createdAt: _session!.createdAt,
-            updatedAt: _session!.updatedAt,
           );
           
           // Check if balance depleted
