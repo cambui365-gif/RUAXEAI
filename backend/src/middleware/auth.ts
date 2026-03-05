@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { db } from '../config/firebase.js';
+import { db, DEMO_MODE } from '../config/firebase.js';
 import { COLLECTIONS } from '../config/constants.js';
 
 // Extend Express Request
@@ -70,13 +70,12 @@ export const stationAuth = async (req: Request, res: Response, next: NextFunctio
     }
 
     const station = stationDoc.data();
-    if (station.tabletId && station.tabletId !== tabletId && station.tabletId !== 'tablet-001') {
-      // Only reject if station has a real (non-default) tablet assigned AND it doesn't match
+    if (!DEMO_MODE && station.tabletId && station.tabletId !== tabletId) {
       res.status(403).json({ success: false, error: 'Tablet not assigned to this station' });
       return;
     }
-    // Auto-assign tablet on first connection (demo-friendly)
-    if (!station.tabletId || station.tabletId === 'tablet-001' || station.tabletId !== tabletId) {
+    // Auto-assign tablet in demo mode or on first connection
+    if (station.tabletId !== tabletId) {
       await db.collection(COLLECTIONS.STATIONS).doc(stationId).update({ tabletId, updatedAt: Date.now() });
     }
 
