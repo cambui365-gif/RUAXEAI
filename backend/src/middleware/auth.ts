@@ -70,9 +70,14 @@ export const stationAuth = async (req: Request, res: Response, next: NextFunctio
     }
 
     const station = stationDoc.data();
-    if (station.tabletId !== tabletId) {
+    if (station.tabletId && station.tabletId !== tabletId && station.tabletId !== 'tablet-001') {
+      // Only reject if station has a real (non-default) tablet assigned AND it doesn't match
       res.status(403).json({ success: false, error: 'Tablet not assigned to this station' });
       return;
+    }
+    // Auto-assign tablet on first connection (demo-friendly)
+    if (!station.tabletId || station.tabletId === 'tablet-001' || station.tabletId !== tabletId) {
+      await db.collection(COLLECTIONS.STATIONS).doc(stationId).update({ tabletId, updatedAt: Date.now() });
     }
 
     req.stationId = stationId;

@@ -2,7 +2,7 @@
  * Payment Routes — SePay webhook + QR generation
  */
 import { Router, Request, Response } from 'express';
-import { db } from '../config/firebase.js';
+import { db, DEMO_MODE } from '../config/firebase.js';
 import { COLLECTIONS } from '../config/constants.js';
 import * as sessionService from '../services/sessionService.js';
 import * as logService from '../services/logService.js';
@@ -155,6 +155,35 @@ router.get('/check/:refCode', async (req: Request, res: Response) => {
     }
 
     const payment = paymentDoc.data()!;
+
+    // DEMO MODE: Auto-confirm payment after 5 seconds
+    if (DEMO_MODE && payment.status === 'PENDING') {
+      const elapsed = Date.now() - payment.createdAt;
+      if (elapsed > 5000) {
+        // Auto-confirm
+        const confirmAmount = payment.amount;
+        await db.collection('pending_payments').doc(req.params.refCode).update({
+          status: 'COMPLETED',
+          actualAmount: confirmAmount,
+          completedAt: Date.now(),
+        });
+
+        if (payment.sessionId) {
+          await sessionService.addDeposit(payment.sessionId, confirmAmount);
+        } else {
+          await sessionService.createSession(payment.stationId, confirmAmount);
+        }
+
+        console.log(`[Demo] Auto-confirmed payment ${req.params.refCode}: ${confirmAmount}đ`);
+
+        res.json({
+          success: true,
+          data: { status: 'COMPLETED', amount: confirmAmount, sessionId: payment.sessionId },
+        });
+        return;
+      }
+    }
+
     res.json({
       success: true,
       data: {
