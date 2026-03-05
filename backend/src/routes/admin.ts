@@ -141,13 +141,14 @@ router.get('/stations/:id', async (req: Request, res: Response) => {
 
 router.post('/stations', async (req: Request, res: Response) => {
   try {
-    const { id, name, location, tabletId, cameraUrl } = req.body;
+    const { id, name, location, tabletId, cameraUrl, imageUrl } = req.body;
     if (!id || !name) { res.status(400).json({ success: false, error: 'id and name required' }); return; }
 
     await db.collection(COLLECTIONS.STATIONS).doc(id).set({
       id, name, location: location || '', status: 'OFFLINE',
       tabletId: tabletId || '', esp32Status: 'OFFLINE',
-      cameraUrl: cameraUrl || '', lastHeartbeat: 0,
+      cameraUrl: cameraUrl || '', imageUrl: imageUrl || '',
+      lastHeartbeat: 0,
       createdAt: Date.now(), updatedAt: Date.now(),
     });
     res.json({ success: true, message: 'Station created' });
